@@ -270,7 +270,7 @@ class mod_vpl_submission {
 
 	
 	/**
-	   Return the grade calulcated using the percent_drop field
+	   Return the grade calculated using the percent_drop field
 	   return original grade if not late or percent_drop ==0
 	   returns 0 if too late
 	   returns grade *(1-percentage lost) if late
@@ -345,7 +345,7 @@ class mod_vpl_submission {
 			$usersid=array($this->instance->userid);
 		}
 		$this->instance->dategraded=time();
-		if($scaleid!=0 && $this->should_record($info->grade))
+		if($scaleid!=0)// && $this->should_record($info->grade)) MKB 1-5-14
 		  {
 			//Sanitize grade
 			if($scaleid>0){
@@ -369,9 +369,12 @@ class mod_vpl_submission {
 			$grades= array();
 			$gradeinfo= array();
 			//If no grade then don't set rawgrade and feedback
-			if(!($info->grade == -1 && $scaleid <0 ))// && shouldRecord($info->grade))
+			if(!($info->grade == -1 && $scaleid <0 ))// && $this->should_record($info->grade))
 			  {
-			        $gradeinfo['rawgrade'] = $this->get_late_grade($info->grade);
+			    if($this->should_record($info->grade)) //MKB 1-5-14
+				  {
+				    $gradeinfo['rawgrade'] = $this->get_late_grade($info->grade);
+				  }
 				$newComment = $this->result_to_HTML($comments,false);
 				$daysLate = $this->days_late();
 				if($daysLate>0)
